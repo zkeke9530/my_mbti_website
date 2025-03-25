@@ -21,6 +21,7 @@
       <div class="card-inner" :class="{ flipped: flipped[index] }">
         <!-- content of the card-front -->
         <div class="card-front">
+          <!-- candidates picture -->
           <div class="image-container" :class="candidate.imagePosition">
             <img
               v-if="candidate.imageUrl"
@@ -29,6 +30,7 @@
               class="candidate-image"
             />
           </div>
+          <!-- candidates detailed information -->
           <div class="text-container" :style="{ textAlign: candidate.textAlign }">
             <h2 class="title" :style="{ fontSize: candidate.titleSize }">
               {{ candidate.title }}
@@ -48,7 +50,8 @@
             </ul>
           </div>
         </div>
-        <!-- 背面内容 -->
+
+        <!-- content of card-back -->
         <div class="card-back">
           <div class="back-content">
             <h3>Contradictions with MBTI</h3>
@@ -61,7 +64,7 @@
         </div>
       </div>
     </section>
-    <!-- 当最后一张候选人卡片可见时，在同一行显示两个按钮 -->
+    <!-- When the last candidate card is visible, display two buttons on the same row -->
     <div v-if="activeCardIndex === candidates.length - 1" class="button-row">
       <button class="next-button" @click="goToNextPage">
         Quit and Discover More
