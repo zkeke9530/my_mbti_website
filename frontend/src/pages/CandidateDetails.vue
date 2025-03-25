@@ -19,7 +19,7 @@
       }"
     >
       <div class="card-inner" :class="{ flipped: flipped[index] }">
-        <!-- 正面内容 -->
+        <!-- content of the card-front -->
         <div class="card-front">
           <div class="image-container" :class="candidate.imagePosition">
             <img
