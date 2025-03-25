@@ -73,7 +73,7 @@
         Choose Another Candidate
       </button>
     </div>
-    <!-- 翻转音效 audio 元素 -->
+    <!-- Flip sound effect audio element-->
     <audio ref="flipAudio" src="src/assets/flip1.m4a"></audio>
   </div>
 </template>
@@ -81,13 +81,12 @@
 <script>
 export default {
   name: 'CandidateDetails',
-  // 注入全局音量状态，默认在 layout.vue 通过 provide 设置为 1（开启声音）
+  // Inject global volume state, default is set to 1 (sound on) in layout.vue via provide
   inject: ['globalVolume'],
   data() {
     return {
-      activeCardIndex: 0, // 当前可视区域内的卡片索引
-      // 用于记录每张卡片是否翻转（初始均为 false）
-      flipped: [],
+      activeCardIndex: 0, // index of the currently visible card
+      flipped: [],  // Used to record whether each card is flipped (initially all false)
       candidates: [
         {
           title: "Candidate A",
@@ -153,20 +152,17 @@ export default {
     };
   },
   mounted() {
-    // 初始化 flipped 数组为与候选人数量一致的 false 值
     this.flipped = this.candidates.map(() => false);
-    // 使用 $nextTick 确保 DOM 渲染完成
     this.$nextTick(function() {
       var options = {
         root: this.$el,
-        threshold: 0.6  // 当元素 60% 可见时触发回调
+        threshold: 0.6  // Trigger callback when 60% of the card is visible
       };
       this.observer = new IntersectionObserver(this.handleIntersect, options);
-      // Vue2 中 $refs.cards 是一个数组
       this.$refs.cards.forEach(function(card) {
         this.observer.observe(card);
       }.bind(this));
-      // 使用全局音量设置翻转音效音量
+      // Set flip sound effect volume using global volume setting
       if (this.$refs.flipAudio) {
         this.$refs.flipAudio.volume = this.globalVolume ? 0.3 : 0;
       }
@@ -177,7 +173,7 @@ export default {
       this.observer.disconnect();
     }
   },
-  // 监听全局音量变化，实时更新翻转音效音量
+  // Watch for global volume changes and update flip sound effect volume in real-time
   watch: {
     globalVolume(newVolume) {
       if (this.$refs.flipAudio) {
@@ -194,7 +190,7 @@ export default {
         }
       });
     },
-    // 切换翻转状态并播放翻转音效
+    // Toggle flip state and play flip sound effect
     toggleFlip(index) {
       this.flipped[index] = !this.flipped[index];
       if (this.$refs.flipAudio) {
@@ -202,11 +198,11 @@ export default {
         this.$refs.flipAudio.play();
       }
     },
-    // 跳转到下一页（FinalPage）
+
     goToNextPage() {
       this.$router.push({ name: 'FinalPage' });
     },
-    // 跳转回候选人选择页面（CandidateMBTI）
+
     goBackToCandidateMBTI() {
       this.$router.push({ name: 'CandidateMBTI' });
     }
@@ -219,14 +215,14 @@ export default {
   height: 90vh;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  padding-bottom: 100px;  /* 增加下边距 */
+  padding-bottom: 100px; 
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: "Nunito", sans-serif;
   user-select: none;
 }
-/* 卡片基本样式 */
+
 .candidate-block {
   width: 90vw;
   min-height: 80vh;
@@ -245,11 +241,11 @@ export default {
 .card-1 {
   margin-top: 0;
 }
-/* 叠放顺序 */
+/* Stacking order */
 .card-1 { z-index: 3; }
 .card-2 { z-index: 2; }
 .card-3 { z-index: 1; }
-/* 图片区域 */
+
 .image-container {
   flex: 0 0 auto;
   display: flex;
@@ -272,7 +268,7 @@ export default {
   height: 300px;
   object-fit: contain;
 }
-/* 文字区域 */
+
 .text-container {
   flex: 1;
   display: flex;
@@ -291,7 +287,7 @@ export default {
 }
 .candidate-info li { margin-bottom: 1rem; line-height: 1.4; }
 .education-title, .work-experience-title, .project-experience-title { font-size: 1.2rem; }
-/* 翻转效果：内层容器 */
+/* Flip: inner container */
 .card-inner {
   position: relative;
   width: 100%;
@@ -302,7 +298,7 @@ export default {
 .card-inner.flipped {
   transform: rotateX(180deg);
 }
-/* 正面和背面 */
+
 .card-front, .card-back {
   position: absolute;
   width: 100%;
@@ -337,7 +333,7 @@ export default {
   margin-bottom: 1rem;
   margin-left: 50px;
 }
-/* 按钮行容器，两个按钮放在同一行 */
+
 .button-row {
   display: flex;
   justify-content: center;
@@ -362,7 +358,7 @@ export default {
   box-shadow: none;
   transform: translateY(3px);
 }
-/* 离开动画 */
+/* leaving animation */
 .exiting {
   transform: translateY(-100px) scale(0.8);
   opacity: 0;
