@@ -1,7 +1,12 @@
 <template>
   <div class="candidate-container">
+    <!-- Use loop to generate a card for each candidate -->
+    <!-- Each card is assigned a class of the form card-1, card-2, etc -->
+    <!-- The 'activeCardIndex' is used to determine which card is currently visible -->
+    <!-- The 'exiting' class is added to cards that have been passed to animate their exit -->
+    <!-- Each card is bound with the toggleFlip method, it will be called when observing the card is clicked. -->
     <section
-      v-for="(candidate, index) in candidates"
+      v-for="(candidate, index) in candidates"  
       :key="index"
       class="candidate-block"
       :class="[ `card-${index+1}`, (index < activeCardIndex) ? 'exiting' : '' ]"
@@ -153,12 +158,16 @@ export default {
   },
   mounted() {
     this.flipped = this.candidates.map(() => false);
+
     this.$nextTick(function() {
       var options = {
         root: this.$el,
         threshold: 0.6  // Trigger callback when 60% of the card is visible
       };
+      // Create an IntersectionObserver to track which card is currently visible
+      // passing in the callback function and options
       this.observer = new IntersectionObserver(this.handleIntersect, options);
+      // Use the observer to track each card
       this.$refs.cards.forEach(function(card) {
         this.observer.observe(card);
       }.bind(this));
@@ -182,9 +191,13 @@ export default {
     }
   },
   methods: {
+    // callback function for IntersectionObserver
+    // when a card satisfies the threshold, call the callback function, set it as the active card
     handleIntersect(entries) {
       entries.forEach(entry => {
+        // Find the index of a card whose current state has changed
         var cardIndex = Array.prototype.indexOf.call(this.$refs.cards, entry.target);
+        // when this card satisfies the threshold 60%, update the activeCardIndex
         if (entry.isIntersecting) {
           this.activeCardIndex = cardIndex;
         }
