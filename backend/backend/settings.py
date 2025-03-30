@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',   # 静态文件
     'mbti',  # 确认应用已注册
     # 当在前端 (Vue.js) 发起一个跨域请求，
     # 如 http://localhost:3000 请求 http://localhost:8000 的 Django 后端
