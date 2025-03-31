@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
-# from .forms import MBTISentenceModifiedForm
 from django.db import models
 from django.forms import Textarea
-from .models import Question  # 导入自定义模型
+
+from .models import Question  
 from .models import MBTIDescriptionTrue
 from .models import MBTISentenceTrue
 from .models import MBTIDescriptionModified
@@ -19,22 +19,22 @@ class MBTISentenceModifiedAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'dimension')  # 在后台列表中显示的字段
-    search_fields = ('text',)             # 允许在后台通过字段 text 搜索问题。
+    list_display = ('text', 'dimension')  # the text to be displayed in the list view at the admin panel
+    search_fields = ('text',)             # allow searching by text field
 
 @admin.register(MBTIDescriptionTrue)
 class MBTIDescriptionAdmin(admin.ModelAdmin):
     list_display = ('mbti_type', 'description')
     search_fields = ('mbti_type',)
 
-# 注册 MBTISentence
+
 @admin.register(MBTISentenceTrue)
 class MBTISentenceAdmin(admin.ModelAdmin):
     list_display = ('mbti_description', 'sentence', 'is_vague')
     list_filter = ('is_vague',)
     search_fields = ('sentence', 'mbti_description__mbti_type')
 
-# 注册 MBTIDescriptionModified
+
 @admin.register(MBTIDescriptionModified)
 class MBTIDescriptionModifiedAdmin(admin.ModelAdmin):
     list_display = ('mbti_type', 'description', 'wrong_mbti_type')

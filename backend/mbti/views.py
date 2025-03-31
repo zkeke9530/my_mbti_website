@@ -1,12 +1,11 @@
-# 处理 MBTI 逻辑的视图函数
-# 提供 API 接口：
-# 获取问题列表：返回所有问题。
-# 接收用户答案：计算 MBTI 结果并返回对应描述
+# View functions to handle MBTI logic
+# Provides API ports:
+# e.g., Get the list of questions: returns all questions.
 
-# api_view这个工具把普通的函数变成可以处理 API 请求的函数，同时你可以指定它只接受某些请求方式，比如 GET
-# 这个函数只能处理 GET 请求
-# 比如用户通过浏览器直接访问 URL，
-# 或者前端通过 axios.get 发送请求
+# The `api_view` decorator turns a regular function into one that can handle API requests.
+# You can specify which HTTP methods the function accepts, such as GET. This function only handles GET requests.
+# For example, users can access the URL directly through a browser,
+# or the frontend can send a request using axios.get.
 
 from django.conf import settings
 from rest_framework.decorators import api_view
@@ -49,28 +48,11 @@ def submit_answers(request):
     answers = request.data.get('answers', [])
     mbti_type = request.data.get('mbtiType', 'Unknown')
     
-    # 模拟计算分数逻辑，这里直接返回前端传来的类型
+    # simulate the MBTI calculation logic, get the type directly from the frontend
     return Response({
         'mbtiType': mbti_type
     })
 
-
-# # 获取 MBTI 描述的 API
-# @api_view(['GET'])
-# def get_mbti_description(request, mbtiType):
-#     try:
-#         mbti_desc = MBTIDescription.objects.get(mbti_type=mbtiType)
-#         serializer = MBTIDescriptionSerializer(mbti_desc)
-#         # 拼接完整的静态路径，确保前端可以加载到图片
-#         data = serializer.data
-#         data['image'] = f"{settings.STATIC_URL}{data['image']}"
-#         return Response(data)
-#     except MBTIDescription.DoesNotExist:
-#         return Response({
-#             'error': '描述未找到',
-#             'image': f"{settings.STATIC_URL}images/default.png"
-#         }, status=404)
-    
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import MBTIDescriptionTrue, MBTISentenceTrue
@@ -90,7 +72,7 @@ def get_mbti_description(request, mbtiType):
         }
         return Response(data)
     except MBTIDescriptionTrue.DoesNotExist:
-        return Response({'error': '描述未找到'}, status=404)
+        return Response({'error': 'Description doesnt found'}, status=404)
 
 
 @api_view(['GET'])
@@ -145,30 +127,19 @@ def get_full_mbti_description_modified(request, mbtiType):
 @api_view(['GET'])
 def get_vague_sentences_by_type(request, mbtiType):
  
-    # 返回给定 mbti_type 的所有“模糊”句子列表
-    # 示例：GET /api/vagueSentences/INFP/
+    # Returns a list of all 'vague' sentences for the given mbti_type
+    # e.g., GET /api/vagueSentences/INFP/
  
     vague_list = MBTIVagueSentence.objects.filter(mbti_type=mbtiType).values_list('text', flat=True)
     return Response(list(vague_list))
 
-# @api_view(['GET'])
-# def get_vague_sentences_block(request, mbtiType):
-#     """
-#     示例: GET /api/vagueBlock/INFP/
-#     返回一个字符串数组，每个元素是换行拆分后的短语
-#     """
-#     try:
-#         block_obj = MBTIVagueBlock.objects.get(mbti_type=mbtiType)
-#         lines = block_obj.get_vague_list()  # 拆分成列表
-#         return Response(lines)
-#     except MBTIVagueBlock.DoesNotExist:
-#         return Response([], status=200)  # 如果找不到，就返回空列表
+
 
 @api_view(['GET'])
 def get_vague_sentences_block(request, mbtiType):
     try:
         block_obj = MBTIVagueBlock.objects.get(mbti_type=mbtiType)
-        # 假设 get_vague_list() 已经返回 [{sentence: '...', explanation: '...'}, ...]
+        # get_vague_list function of MBTIVagueBlock will return [{sentence: '...', explanation: '...'}, ...]
         data = block_obj.get_vague_list()
         return Response(data)
     except MBTIVagueBlock.DoesNotExist:
