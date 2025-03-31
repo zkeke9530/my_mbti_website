@@ -23,7 +23,7 @@ import collections
 import re
 
 @api_view(['GET'])
-def get_questions(request):
+def get_questions(request): 
     questions = Question.objects.all()
     data = [
         {

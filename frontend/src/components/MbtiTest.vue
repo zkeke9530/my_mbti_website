@@ -1,15 +1,12 @@
 <template>
   <div class="test-page">
 
-    <!-- 测试卡片容器 -->
     <div class="test-container">
 
-      <!-- <h2 class="test-title">MBTI 测试题目</h2> -->
       <div class="card-body">
         <!-- 题干区域 -->
         <div v-if="currentQuestion" style="font-family: 'Open Sans', sans-serif; font-weight: bold;">
           <p class="question-text">{{ currentQuestion.text }}</p>
-          <!-- <p class="question-text">{{ currentQuestion.text }} - {{ currentQuestion.dimension }}</p> -->
           <button
             class="option-button"
             v-for="(option, key) in currentQuestion.options"
@@ -21,10 +18,10 @@
           </button>
         </div>
         <div v-else>
-          <p>正在加载题目...</p>
+          <p>Loading questions ...</p>
         </div>
 
-        <!-- 底部操作按钮 -->
+        <!-- bottom button -->
         <div class="btn-group">
           <button @click="prevQuestion" :disabled="currentQuestionIndex === 0">
             <img src="@/assets/previous_button.png" alt="Previous" />
@@ -46,20 +43,19 @@
       </div>
     </div>
     
-    <!-- 图片区域 -->
     <div class="image-area">
-      <img src="@/assets/testPage_icon.png" alt="描述图片" class="description-image" />
+      <img src="@/assets/testPage_icon.png" alt="image" class="description-image" />
     </div>
 
 
-    <!-- 进度条区域 -->
+    <!-- processing bar -->
     <div class="progress-area">
       <div class="progress-bar">
         <div class="progress" :style="{ width: progress + '%' }"></div>
       </div>
     </div>
 
-    <!-- 对话框（未答题提示） -->
+    <!-- diaglog box -->
     <div v-if="dialogVisible" class="dialog-overlay">
       <div class="dialog-box">
         <h3>Notice</h3>
