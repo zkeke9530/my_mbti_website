@@ -99,7 +99,7 @@ export default {
         this.questions = response.data;
         this.updateProgress();
       } catch (error) {
-        console.error('获取题目失败:', error);
+        console.error('Fail to load questions...', error);
       }
     },
     nextQuestion() {
@@ -195,18 +195,17 @@ export default {
 /* 容器卡片 */
 .test-container {
   background-color: #FBF2DF;
-  /* background-color: transparent; */
   width: 100%;
   max-width: 1000px;
   min-height: 300px;
   margin-top: 20px;
-  border-radius: 8px; /* 边框圆角半径 */
+  border-radius: 8px;
   padding: 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   
 }
 
-/* 图片区域 */
+
 .image-area {
   display: flex;
   justify-content: center; 
@@ -219,7 +218,7 @@ export default {
   height: auto;
 }
 
-/* 卡片标题 */
+
 .test-title {
   text-align: center;
   font-weight: bold;
@@ -227,7 +226,7 @@ export default {
   margin-bottom: 1rem;
 }
 
-/* 卡片内容区域 */
+
 .card-body {
   margin-top: 16px;
   min-height: 200px;
@@ -235,13 +234,13 @@ export default {
   font-size: 1.1rem;
 }
 
-/* 题目文本 */
+
 .question-text {
   font-family: 'Nunito', sans-serif;
   font-weight: bold;
 }
 
-/* 选项按钮 */
+
 .option-button {
   background-color: #e0e0e027;
   border: none;
@@ -266,7 +265,7 @@ export default {
   color: #fff;
 }
 
-/* 底部按钮组 */
+
 .btn-group {
   display: flex;
   justify-content: space-between;
@@ -283,8 +282,8 @@ export default {
 }
 
 .btn-group button img {
-  width: 100%; /* 设置图片宽度为100% */
-  height: 100%; /* 设置图片高度为100% */
+  width: 100%; 
+  height: 100%;
   object-fit: contain; /* 确保图片按比例填充容器 */
 }
 
@@ -293,9 +292,8 @@ export default {
 }
 
 .btn-group button:hover img {
-  /* transform: scale(1.1);  */
   transform: translateY(3px);
-  transition: transform 0.3s; /* 添加过渡效果 */
+  transition: transform 0.3s; 
 }
 
 /* 进度条区 */
@@ -322,7 +320,7 @@ export default {
   transition: width 0.3s ease;
 }
 
-/* 对话框遮罩层 */
+
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -335,7 +333,7 @@ export default {
   align-items: center;
 }
 
-/* 对话框容器 */
+
 .dialog-box {
   background-color: #FBF2DF;
   padding: 24px;
@@ -348,8 +346,8 @@ export default {
 
 .dialog-box h3 {
   margin-bottom: 1rem;
-  font-size: 24px; /* 设置标题字体大小 */
-  font-weight: bold; /* 设置标题字体粗细 */
+  font-size: 24px; 
+  font-weight: bold; 
 }
 .dialog-box p {
   margin-bottom: 1rem;

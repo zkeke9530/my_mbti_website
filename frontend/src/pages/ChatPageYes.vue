@@ -1,9 +1,9 @@
 <template>
-  <!-- 整个页面容器绑定 slide-up 类 -->
+  <!-- Bind the slide-up class to the entire page container-->
   <div :class="['page-container', { 'slide-up': slideUp }]">
-    <!-- 页面主要内容始终存在 -->
+    <!-- Main content of the page always exists -->
     <div class="content-wrapper">
-      <!-- 左侧聊天气泡区域 -->
+      <!-- chat area -->
       <div class="chat-bubble">
         <p v-for="(line, i) in displayedLines" :key="i" class="chat-line" v-html="line"></p>
 
@@ -28,6 +28,7 @@
         <p v-if="showDots" class="chat-line dots">
           <span>.</span><span>.</span><span>.</span>
         </p>
+        <!-- Blinking cursor animation appears only when 'typedLine' is displayed -->
         <p v-else-if="typedLine" class="chat-line typing">
           {{ typedLine }}
         </p>
@@ -40,13 +41,13 @@
         </button>
       </div>
 
-      <!-- 右侧插图 -->
+      <!-- right illustration -->
       <div class="image-container">
         <img src="@/assets/two_women.png" alt="Talking" class="talk-image" />
       </div>
     </div>
   </div>
-  <!-- 全屏覆盖的小贴士提示层 -->
+  <!-- Fullscreen overlay for final tips -->
   <div v-if="showFinalOverlay" class="final-overlay" @click="navigateToFeedbackPage">
     <div class="final-box">
       <!-- Lottie 动画和其它内容 -->
@@ -72,13 +73,13 @@
       <p v-if="showClickToContinue" class="click-to-continue">Click anywhere to continue</p>
     </div>
   </div>
-  <!-- 添加打字机音效 -->
+  <!-- Add typing sound effect -->
   <audio ref="typeAudio" src="src/assets/type.wav"></audio> 
-  <!-- 添加发送选项按钮时的音效 -->
+  <!-- Add sound effect for sending option buttons -->
   <audio ref="sendingAudio" src="src/assets/sending.wav"></audio>
-  <!-- 添加 Next 按钮点击后的音效 -->
+  <!-- Add sound effect for clicking the Next button -->
   <audio ref="flip3Audio" src="src/assets/flip3.wav"></audio>
-  <!-- 时钟音效 -->
+  <!-- Clock sound effect -->
   <audio ref="clockAudio" src="src/assets/clock.wav"></audio>
 </template>
 
@@ -87,24 +88,24 @@ import { ref, onMounted, inject, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 
-// 使用 Vue Router
 const router = useRouter()
 
-// 注入全局音量状态（在 layout.vue 中已使用 provide 提供）
+// Inject global volume state (provided in layout.vue)
 const globalVolume = inject('globalVolume')
 
-// 聊天逻辑状态
-const displayedLines = ref([])
+// Chat logic state
+const displayedLines = ref([])  // text that has completed typing and been displayed in the chat area
 const currentLineText = ref("")
-const multipleOptions = ref(null)
-const showButton = ref(false)
 const typedLine = ref("")
 const currentLineIndex = ref(0)
-const showDots = ref(false)
-const allTextFinished = ref(false)
 const typedCharIndex = ref(0)
 
-// 预设文本行数据
+const multipleOptions = ref(null)
+const showButton = ref(false)
+const showDots = ref(false)
+const allTextFinished = ref(false)
+
+// chat lines text
 const lines = [
   { text: "I chose the candidate with the ENTJ personality type.", isButton: true },
   { text: "Well done! Based on the strong MBTI match, the executives are pleased with your selection.", isButton: false },
@@ -114,23 +115,24 @@ const lines = [
 const typingSpeed = 30
 const linePause = 500
 
-// 引用音频元素
+// Reference audio elements
 const typeAudio = ref(null)
 const sendingAudio = ref(null)
 const flip3Audio = ref(null)
 const clockAudio = ref(null)
 
-// 页面向上滑动
+// Page slide-up animation
 const slideUp = ref(false)
 const showFinalOverlay = ref(false)
 const showClickToContinue = ref(false)
 
 function proceedLine() {
+  // check if all lines have been displayed
   if (currentLineIndex.value >= lines.length) {
     allTextFinished.value = true
     return
   }
-  const lineObj = lines[currentLineIndex.value]
+  const lineObj = lines[currentLineIndex.value] // Get the line object currently being processed
   if (lineObj.isButton) {
     showButton.value = true
     currentLineText.value = lineObj.text
@@ -142,7 +144,7 @@ function proceedLine() {
       currentLineText.value = lineObj.text
       typedLine.value = ""
       typedCharIndex.value = 0
-      typeNextChar()
+      typeNextChar()  // if the line is not a button, start typing animation, call typeNextChar()
     }, 3000)
   }
 }
@@ -172,31 +174,39 @@ function handleMultiOptionClick(option) {
   setTimeout(() => { proceedLine() }, linePause)
 }
 
+// In typing animation, the typeNextChar() is delayed for each printed character until the entire sentence is complete, equivalent to recursively controlling a word-for-word animation of text.
+// But the typing sound doesn't play every time when print a character, 
+// It starts when the first character of the sentence is printed,
+// Then continue to play for a while until the whole sentence is printed, and then manually pause the sound effect.
+
 function typeNextChar() {
-  const line = currentLineText.value
-  // 如果是当前行的第一个字符，则启动打字机音效
+  const line = currentLineText.value  // Get the full line text from currentLineText 
+  // If it's the first character of the current line, 
+  // start the typing sound effect
   if (typedCharIndex.value === 0 && typeAudio.value) {
     typeAudio.value.currentTime = 0
     typeAudio.value.play().catch(() => {})
   }
+  // Increments are displayed one character at a time
   if (typedCharIndex.value < line.length) {
     typedLine.value += line.charAt(typedCharIndex.value)
     typedCharIndex.value++
     setTimeout(() => { typeNextChar() }, typingSpeed)
   } else {
+    // When the line is fully typed, stop the typing sound effect
     if (typeAudio.value) {
       typeAudio.value.pause()
       typeAudio.value.currentTime = 0
     }
-    displayedLines.value.push(typedLine.value)
-    typedLine.value = ""
+    displayedLines.value.push(typedLine.value)  
+    typedLine.value = ""  // Clear the typedLine for the next paragraph
     currentLineIndex.value++
     setTimeout(() => { proceedLine() }, linePause)
   }
 }
 
 function handleFinalClick() {
-  // 播放 Next 按钮的翻转音效
+  // Play the flip sound effect for the Next button
   if (flip3Audio.value) {
     flip3Audio.value.currentTime = 0
     flip3Audio.value.play().catch(() => {})
@@ -208,7 +218,7 @@ function handleFinalClick() {
       showClickToContinue.value = true
     }, 2000)
   }, 600)
-  console.log("页面滑动上移，显示全屏蒙版") 
+  console.log("Page slides up, showing fullscreen overlay") 
 }
 
 function navigateToFeedbackPage() {
@@ -217,7 +227,7 @@ function navigateToFeedbackPage() {
 
 onMounted(() => {
   proceedLine()
-  // 使用全局音量设置各个音频组件的音量
+  // Use global volume to set the volume of audio components
   if (typeAudio.value) {
     typeAudio.value.volume = globalVolume.value ? 0.3 : 0;
   }
@@ -232,7 +242,7 @@ onMounted(() => {
   }
 })
 
-// 监听全局音量的变化，实时更新音频组件的音量
+// Watch for changes in global volume and update audio component volumes in real-time
 watch(globalVolume, (newVolume) => {
   if (typeAudio.value) {
     typeAudio.value.volume = newVolume ? 0.3 : 0;
@@ -248,7 +258,7 @@ watch(globalVolume, (newVolume) => {
   }
 })
 
-// 当全屏覆盖层显示时播放 clock.wav 音效，关闭时停止
+// Play clock.wav sound effect when the fullscreen overlay is displayed, stop it when closed
 watch(showFinalOverlay, (newVal) => {
   if (newVal && clockAudio.value) {
     clockAudio.value.currentTime = 0
@@ -311,6 +321,8 @@ watch(showFinalOverlay, (newVal) => {
   line-height: 1.5;
   word-wrap: break-word;
 }
+
+/* typing audio */
 .typing:after {
   content: '▋';
   margin-left: 0.25rem;
@@ -334,6 +346,8 @@ watch(showFinalOverlay, (newVal) => {
   0%, 20%, 100% { opacity: 0; }
   40% { opacity: 1; }
 }
+
+
 .chat-button {
   display: block;
   margin-bottom: 0.75rem;
