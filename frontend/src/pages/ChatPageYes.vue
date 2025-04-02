@@ -322,7 +322,8 @@ watch(showFinalOverlay, (newVal) => {
   word-wrap: break-word;
 }
 
-/* typing audio */
+/* typing */
+/* Add a cursor symbol at the end of all elements whose class is typing. */
 .typing:after {
   content: '▋';
   margin-left: 0.25rem;

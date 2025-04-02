@@ -121,18 +121,18 @@ export default {
     selectAnswer(option) {
       const dimension = this.currentQuestion.dimension;
 
-      // 如果之前选过答案，先减去那个分数
+      // if the current question has been answered, deduct the previous answer's score
       if (this.selectedOptions[this.currentQuestionIndex]) {
         const prevOption = this.selectedOptions[this.currentQuestionIndex];
         this.score[dimension] -= prevOption.weight;
       }
 
-      // 设置新的答案
+      // update the answer and score
       this.answers[this.currentQuestionIndex] = option.text;
       this.selectedOptions[this.currentQuestionIndex] = option;  
       this.score[dimension] += option.weight;
 
-      // 如果还没到最后一题，自动下一题；否则就提交
+      // if not the last question, move to the next question, otherwise, submit the answers
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.nextQuestion();
       } 
@@ -143,16 +143,15 @@ export default {
         return;
       }
       const mbtiType = this.calculateMBTI();
-      console.log('最终MBTI类型:', mbtiType);
+      console.log('MBTI type is:', mbtiType);
 
       try {
         const response = await axios.post('http://127.0.0.1:8000/api/submit/', {
           answers: this.answers,
           mbtiType: mbtiType,
         });
-        console.log('提交结果:', response.data);
+        console.log('result:', response.data);
 
-        // 跳转到结果页，传递结果参数
         this.$router.push({
           name: 'FinishTestPage',
           query: { result: response.data.mbtiType },
@@ -177,14 +176,12 @@ export default {
 </script>
 
 <style scoped>
-/* 整个页面居中布局 + 背景色 */
+
 .test-page {
   font-family: 'Nunito', sans-serif;
   position: relative;
   width: 100%;
   height: 100vh;
-
-  /* Flex居中 */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -192,7 +189,7 @@ export default {
   
 }
 
-/* 容器卡片 */
+
 .test-container {
   background-color: #FBF2DF;
   width: 100%;
@@ -351,8 +348,8 @@ export default {
 }
 .dialog-box p {
   margin-bottom: 1rem;
-  font-size: 16px; /* 设置文本字体大小 */
-  font-weight: bold; /* 设置文本字体粗细 */
+  font-size: 16px; 
+  font-weight: bold; 
 }
 .dialog-box button {
   background-color: #B25538;
@@ -361,7 +358,7 @@ export default {
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
-  user-select: none; /* 禁用文本选择 */
+  user-select: none; 
   font-size: 15px;
   font-weight: bold;
 }

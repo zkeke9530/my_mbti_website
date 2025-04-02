@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <!-- 📢 对话框 -->
+    <!-- diaglog box -->
     <div v-if="showDialog" class="dialog-overlay" @click.self="showDialog = false">
       <div class="dialog-box">
         <h2 v-if="dialogStep === 1">You have a sharp eye! 👀</h2>

@@ -59,12 +59,11 @@ export default {
     }
   },
   mounted() {
-    console.log("ResultDisplay/MBTI 类型:", this.mbtiType);
-    console.log("ResultDisplay/描述:", this.description);
+    console.log("ResultDisplay/MBTI type:", this.mbtiType);
+    console.log("ResultDisplay/description: ", this.description);
   },
   methods: {
     getFullImagePath(imagePath) {
-      // 根据后端实际路径修改
       return `http://127.0.0.1:8000/static/${imagePath}`;
     }
   }
@@ -72,7 +71,6 @@ export default {
 </script>
 
 <style scoped>
-/* 外层容器，居中布局 */
 .result-container {
   display: flex;
   justify-content: center;

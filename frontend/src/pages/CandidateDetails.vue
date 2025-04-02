@@ -167,7 +167,9 @@ export default {
       // Create an IntersectionObserver to track which card is currently visible
       // passing in the callback function and options
       this.observer = new IntersectionObserver(this.handleIntersect, options);
-      // Use the observer to track each card
+      // Add all card DOM elements to the observer watch list
+      // every card is being watched. 
+      // Once it rolls in front of the user (60% visible), it will automatically trigger the callback function.
       this.$refs.cards.forEach(function(card) {
         this.observer.observe(card);
       }.bind(this));
@@ -177,6 +179,11 @@ export default {
       }
     }.bind(this));
   },
+  // When the card component is about to be "destroyed", 
+  // the monitoring relationship with IntersectionObserver is set to be disconnected
+  // If I don't disconnect it manually, 
+  // it will continue to "observe" those elements that have disappeared in the back; 
+  // Although the user has already switched pages
   beforeDestroy() {
     if (this.observer) {
       this.observer.disconnect();

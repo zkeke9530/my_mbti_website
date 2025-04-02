@@ -10,7 +10,7 @@
       </div>
 
       <div class="button-container">
-        <!-- 如果 showAnimation 为 true，则显示 Lottie 动画，否则显示按钮 -->
+        <!-- If showAnimation is true, display the Lottie animation; otherwise, display the button -->
         <div v-if="showAnimation" class="button-animation">
           <DotLottieVue 
             ref="lottieRef"
@@ -33,7 +33,7 @@
         />
       </div>
     </div>
-    <!-- 使用 audio 标签播放音效，并设置 loop 属性 -->
+    <!-- loading animation audio -->
     <audio ref="loadingAudio" src="src/assets/loading.wav" loop ></audio>
   </div>
 </template>
@@ -43,24 +43,21 @@ import { ref, onMounted, watch, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 
-// 从全局（例如 layout 中）注入音量开关，true 表示开启声音
+// Inject the global volume state (e.g., provided in layout.vue)
 const globalVolume = inject('globalVolume')
 
-// 状态变量
+// variable to control the visibility of the animation
 const showAnimation = ref(true)
 
 const router = useRouter()
 const route = useRoute()
-
-// 获取 audio 标签的引用
 const loadingAudio = ref(null)
 
-// 延迟函数
+// delay function to hide animation
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-// 点击按钮跳转结果页
 function revealResult() {
   router.push({
     name: 'ResultPage',
@@ -69,21 +66,19 @@ function revealResult() {
 }
 
 onMounted(async () => {
-  // 设置 loading 音效的音量，并尝试自动播放
   if (loadingAudio.value) {
     loadingAudio.value.volume = globalVolume.value ? 0.15 : 0
     loadingAudio.value.playbackRate = 1.55
     loadingAudio.value.play().catch(err => console.error('Audio play error:', err))
   }
 
-  // 监听全局音量变化，实时更新 audio 元素的音量
   watch(globalVolume, (newVal) => {
     if (loadingAudio.value) {
       loadingAudio.value.volume = newVal ? 0.3 : 0
     }
   })
 
-  // 延迟 9000 毫秒后隐藏动画，并暂停音频
+  // Hide the animation and pause the audio after a 9000ms delay
   await delay(9000)
   showAnimation.value = false
   if (loadingAudio.value) {
